@@ -1,0 +1,4 @@
+-X GET
+-H @.secrets/current_header
+-H "Content-Type: application/json"
+-H "Accept: application/json"
