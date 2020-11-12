@@ -20,11 +20,11 @@ def get_creds():
     token_combo = data['consumer_key'] + ':' + data['consumer_secret']
     data['basic_token'] = str(base64.b64encode(token_combo.encode('utf-8')),
                               'utf-8')
-    print(data)
+
     return data
 
 
-def get_api():
+def login():
     creds = get_creds()
     url = 'https://api.stubhub.com/sellers/oauth/accesstoken?grant_type='
     url += 'client_credentials'
@@ -43,5 +43,5 @@ def get_api():
 
 
 if __name__ == '__main__':
-    api = get_api()
+    api = login()
     print(api.status_code, api.reason, api.text)
