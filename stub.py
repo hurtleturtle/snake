@@ -5,10 +5,13 @@ import base64
 
 class Stubbie():
     def __init__(self, basic_token=None, username=None, password=None):
-        self.base_uri = 'https://api.stubhub.com/sellers'
+        self.base_uri = 'https://api.stubhub.com/'
         self.api = self.login(basic_token, username, password)
         self.token = self.api['access_token']
         self.headers = {'Authorization': 'Bearer ' + self.token}
+
+    def __getitem__(self, item):
+        return self.api[item]
 
     def set_url(self, url):
         if url[0] == '/':
@@ -32,7 +35,8 @@ class Stubbie():
             if not cred_value:
                 creds[cred] = standard_creds[cred]
 
-        url = self.set_url('/oauth/accesstoken?grant_type=client_credentials')
+        url = self.set_url('/sellers/oauth/accesstoken?' +
+                           'grant_type=client_credentials')
 
         headers = {
             'Content-Type': 'application/json',
