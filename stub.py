@@ -70,6 +70,12 @@ class Stubbie():
             'start',
             'rows'
         }
+        url = self.set_url('/sellers/search/locations/v3')
+        if self._check_params(params, allowed_params):
+            r = requests.get(url, params=params, headers=self.headers)
+            r.raise_for_status()
+
+            return r.json()
 
     def _check_params(self, params, allowed_params):
         disallowed_params = set(params) - set(allowed_params)
@@ -78,7 +84,7 @@ class Stubbie():
             print('The following parameters are not allowed:\n' +
                   f'{disallowed_params}\nPlease only specify parameters from' +
                   f'the following list:\n{allowed_params}')
-            return False
+            exit()
         else:
             return True
 
@@ -109,4 +115,4 @@ def get_creds():
 
 if __name__ == '__main__':
     stub = Stubbie()
-    print(stub.api)
+    print(stub.search_locations({'q': 'London'}))
