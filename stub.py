@@ -51,6 +51,34 @@ class Stubbie():
 
         return r.json()
 
+    def search_locations(self, params):
+        '''Search for events in a particular location'''
+        allowed_params = {
+            'q',
+            'city',
+            'state',
+            'country',
+            'postalCode',
+            'point',
+            'radius',
+            'units',
+            'sort',
+            'fieldList',
+            'start',
+            'rows'
+        }
+
+    def _check_params(self, params, allowed_params):
+        disallowed_params = set(params) - set(allowed_params)
+
+        if disallowed_params != set():
+            print('The following parameters are not allowed:\n' +
+                  f'{disallowed_params}\nPlease only specify parameters from' +
+                  f'the following list:\n{allowed_params}')
+            return False
+        else:
+            return True
+
 
 def get_creds():
     data = {
