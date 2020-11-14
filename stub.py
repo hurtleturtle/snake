@@ -61,7 +61,9 @@ def get_creds():
             with open(val) as f:
                 data[key] = f.read().strip()
         except OSError:
-            data[key] = None
+            print('Please store your credentials in the .secrets folder or' +
+                  ' add them into the class when initialising.')
+            exit()
 
     token_combo = data['consumer_key'] + ':' + data['consumer_secret']
     data['basic_token'] = str(base64.b64encode(token_combo.encode('utf-8')),
