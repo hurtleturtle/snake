@@ -8,7 +8,10 @@ class Stubbie():
         self.base_uri = 'https://api.stubhub.com'
         self.api = self.login(basic_token, username, password)
         self.token = self.api['access_token']
-        self.headers = {'Authorization': 'Bearer ' + self.token}
+        self.headers = {
+            'Authorization': 'Bearer ' + self.token,
+            'Accept': 'application/json'
+        }
 
     def __getitem__(self, item):
         return self.api[item]
