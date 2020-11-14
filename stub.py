@@ -5,7 +5,7 @@ import base64
 
 class Stubbie():
     def __init__(self, basic_token=None, username=None, password=None):
-        self.base_uri = 'https://api.stubhub.com/'
+        self.base_uri = 'https://api.stubhub.com'
         self.api = self.login(basic_token, username, password)
         self.token = self.api['access_token']
         self.headers = {'Authorization': 'Bearer ' + self.token}
