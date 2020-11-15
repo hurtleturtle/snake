@@ -82,7 +82,7 @@ class Stubbie():
                 print(error)
                 return {}
 
-            def get_locations(locations, new_page, i):
+            def get_locations(locations, new_page):
                 locations['locations'].extend(new_page['locations'])
                 return locations
 
@@ -99,7 +99,7 @@ class Stubbie():
             for i in range(1, ceil(num_results / rows)):
                 params['start'] = str(i * rows)
                 r = requests.get(url, params=params, headers=self.headers)
-                pages = page_func(pages, r.json(), i)
+                pages = page_func(pages, r.json())
 
         return pages
 
