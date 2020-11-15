@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import requests
 import base64
+from math import ceil
 
 
 class Stubbie():
@@ -71,11 +72,36 @@ class Stubbie():
             'rows'
         }
         url = self.set_url('/sellers/search/locations/v3')
+        params.setdefault('rows', '500')
+
         if self._check_params(params, allowed_params):
             r = requests.get(url, params=params, headers=self.headers)
-            r.raise_for_status()
 
-            return r.json()
+            if r.status_code != 200:
+                error = f'Could not retrieve locations.\n{r.reason}'
+                print(error)
+                return {}
+
+            def get_locations(locations, new_page, i):
+                locations['locations'].extend(new_page['locations'])
+                return locations
+
+            locations = self._get_pages(r.json(), url, params, get_locations)
+
+            return locations
+
+    def _get_pages(self, first_page, url, params, page_func):
+        rows = int(params['rows'])
+        num_results = first_page['numFound']
+        pages = first_page
+
+        if num_results > rows:
+            for i in range(1, ceil(num_results / rows)):
+                params['start'] = str(i * rows)
+                r = requests.get(url, params=params, headers=self.headers)
+                pages = page_func(pages, r.json(), i)
+
+        return pages
 
     def _check_params(self, params, allowed_params):
         disallowed_params = set(params) - set(allowed_params)
