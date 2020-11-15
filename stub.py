@@ -118,6 +118,44 @@ class Stubbie():
                                  error)
         return events
 
+    def search_venues(self, params={}):
+        allowed_params = {
+            'q',
+            'id',
+            'name',
+            'title',
+            'address',
+            'city',
+            'state',
+            'country',
+            'postalCode',
+            'status',
+            'point',
+            'radius',
+            'unit',
+            'geoId',
+            'geoName',
+            'categoryId',
+            'categoryName',
+            'start',
+            'rows',
+            'sourceId',
+            'hidden',
+            'sort',
+            'fieldList'
+        }
+        url = self.set_url('/partners/search/venues/v3')
+        error = 'Could not retrieve venues.'
+        params.setdefault('rows', '500')
+
+        def get_venues(all_pages, new_page):
+            all_pages['venues'].extend(new_page['venues'])
+            return all_pages
+
+        venues = self._get_pages(url, params, allowed_params, get_venues,
+                                 error)
+        return venues
+
     def _get_pages(self, url, params, allowed_params, page_func, error_msg):
         if not self._check_params(params, allowed_params):
             return {}
@@ -181,3 +219,4 @@ def get_creds():
 if __name__ == '__main__':
     stub = Stubbie()
     pprint(stub.search_events({'q': 'Jimmy Carr'}))
+    pprint(stub.search_venues({'q': 'London'}))
