@@ -1,3 +1,4 @@
 .secrets
 *token*
 *.json
+__pycache__

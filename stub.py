@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import requests
 import base64
+from math import ceil
 
 
 class Stubbie():
@@ -8,7 +9,10 @@ class Stubbie():
         self.base_uri = 'https://api.stubhub.com'
         self.api = self.login(basic_token, username, password)
         self.token = self.api['access_token']
-        self.headers = {'Authorization': 'Bearer ' + self.token}
+        self.headers = {
+            'Authorization': 'Bearer ' + self.token,
+            'Accept': 'application/json'
+        }
 
     def __getitem__(self, item):
         return self.api[item]
@@ -51,6 +55,65 @@ class Stubbie():
 
         return r.json()
 
+    def search_locations(self, params):
+        '''Search for events in a particular location'''
+        allowed_params = {
+            'q',
+            'city',
+            'state',
+            'country',
+            'postalCode',
+            'point',
+            'radius',
+            'units',
+            'sort',
+            'fieldList',
+            'start',
+            'rows'
+        }
+        url = self.set_url('/sellers/search/locations/v3')
+        params.setdefault('rows', '500')
+
+        if self._check_params(params, allowed_params):
+            r = requests.get(url, params=params, headers=self.headers)
+
+            if r.status_code != 200:
+                error = f'Could not retrieve locations.\n{r.reason}'
+                print(error)
+                return {}
+
+            def get_locations(locations, new_page):
+                locations['locations'].extend(new_page['locations'])
+                return locations
+
+            locations = self._get_pages(r.json(), url, params, get_locations)
+
+            return locations
+
+    def _get_pages(self, first_page, url, params, page_func):
+        rows = int(params['rows'])
+        num_results = first_page['numFound']
+        pages = first_page
+
+        if num_results > rows:
+            for i in range(1, ceil(num_results / rows)):
+                params['start'] = str(i * rows)
+                r = requests.get(url, params=params, headers=self.headers)
+                pages = page_func(pages, r.json())
+
+        return pages
+
+    def _check_params(self, params, allowed_params):
+        disallowed_params = set(params) - set(allowed_params)
+
+        if disallowed_params != set():
+            print('The following parameters are not allowed:\n' +
+                  f'{disallowed_params}\nPlease only specify parameters from' +
+                  f'the following list:\n{allowed_params}')
+            exit()
+        else:
+            return True
+
 
 def get_creds():
     data = {
@@ -78,4 +141,4 @@ def get_creds():
 
 if __name__ == '__main__':
     stub = Stubbie()
-    print(stub.api)
+    print(stub.search_locations({'q': 'London'}))
