@@ -84,6 +84,29 @@ class Stubbie():
 
         return locations
 
+
+            # def search_seattraits(self, params={}):
+            #     '''Search for events in a particular seattraits'''
+            #     allowed_params = {
+            #         'id',
+            #         'name',
+            #         'seatTraits',
+            #         'seatTraits.id',
+            #         'seatTraits.name',
+            #         'seatTraits.type',
+            #     }
+            #     url = self.set_url('/partners/catalog/events/v3/{eventId}/seatTraits3')
+            #     params.setdefault('rows', '500')
+            #
+            #     def get_seattraits(seattraits, new_page):
+            #         seattraits['seattraits'].extend(new_page['seattraits'])
+            #         return seattraits
+            # 
+            #     seattraits = self._get_pages(url, params, allowed_params, get_seattraits,
+            #                                 'Could not retrieve seattraits.')
+            #
+            #     return seattraits
+
     def search_events(self, params={}):
         '''Search for an event based on defined parameters'''
         allowed_params = {
