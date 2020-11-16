@@ -2,6 +2,7 @@
 import requests
 import base64
 from math import ceil
+from pprint import pprint
 
 
 class Stubbie():
@@ -55,7 +56,7 @@ class Stubbie():
 
         return r.json()
 
-    def search_locations(self, params):
+    def search_locations(self, params={}):
         '''Search for events in a particular location'''
         allowed_params = {
             'q',
@@ -74,23 +75,61 @@ class Stubbie():
         url = self.set_url('/sellers/search/locations/v3')
         params.setdefault('rows', '500')
 
-        if self._check_params(params, allowed_params):
-            r = requests.get(url, params=params, headers=self.headers)
-
-            if r.status_code != 200:
-                error = f'Could not retrieve locations.\n{r.reason}'
-                print(error)
-                return {}
-
-            def get_locations(locations, new_page):
-                locations['locations'].extend(new_page['locations'])
-                return locations
-
-            locations = self._get_pages(r.json(), url, params, get_locations)
-
+        def get_locations(locations, new_page):
+            locations['locations'].extend(new_page['locations'])
             return locations
 
-    def _get_pages(self, first_page, url, params, page_func):
+        locations = self._get_pages(url, params, allowed_params, get_locations,
+                                    'Could not retrieve locations.')
+
+        return locations
+
+    def search_events(self, params={}):
+        '''Search for an event based on defined parameters'''
+        allowed_params = {
+            'q',
+            'id',
+            'name',
+            'date',
+            'dateLocal',
+            'venue',
+            'venueId',
+            'city',
+            'state',
+            'country',
+            'categoryName',
+            'performerName',
+            'performerId',
+            'parking',
+            'minAvailableTickets',
+            'start',
+            'rows',
+            'sort'
+        }
+        url = self.set_url('/sellers/search/events/v3')
+        error = 'Could not retrieve events.'
+        params.setdefault('rows', '500')
+
+        def get_events(self, all_pages, new_page):
+            all_pages['events'].extend(new_page['events'])
+            return all_pages
+
+        events = self._get_pages(url, params, allowed_params, get_events,
+                                 error)
+        return events
+
+    def _get_pages(self, url, params, allowed_params, page_func, error_msg):
+        if not self._check_params(params, allowed_params):
+            return {}
+
+        r = requests.get(url, params=params, headers=self.headers)
+
+        if r.status_code != 200:
+            error_msg += f'\n{r.status_code} {r.reason}'
+            print(error_msg)
+            return {}
+
+        first_page = r.json()
         rows = int(params['rows'])
         num_results = first_page['numFound']
         pages = first_page
@@ -141,4 +180,4 @@ def get_creds():
 
 if __name__ == '__main__':
     stub = Stubbie()
-    print(stub.search_locations({'q': 'London'}))
+    pprint(stub.search_events({'q': 'Jimmy Carr'}))
