@@ -95,13 +95,13 @@ class Stubbie():
             #         'seatTraits.name',
             #         'seatTraits.type',
             #     }
-            #     url = self.set_url('/partners/catalog/events/v3/{eventId}/seatTraits3')
+            #     url = self.set_url('/partners/catalog/events/v3/{eventId}/seatTraits')
             #     params.setdefault('rows', '500')
             #
             #     def get_seattraits(seattraits, new_page):
             #         seattraits['seattraits'].extend(new_page['seattraits'])
             #         return seattraits
-            # 
+            #
             #     seattraits = self._get_pages(url, params, allowed_params, get_seattraits,
             #                                 'Could not retrieve seattraits.')
             #
@@ -238,7 +238,6 @@ def get_creds():
 
     return data
 
-#hello
 if __name__ == '__main__':
     stub = Stubbie()
     pprint(stub.search_events({'q': 'Jimmy Carr'}))
