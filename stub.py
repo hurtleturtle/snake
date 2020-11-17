@@ -88,12 +88,13 @@ class Stubbie():
         '''get seattraits for an event'''
 
         url = self.set_url('/partners/catalog/events/v3/'+ event_id + '/seatTraits')
+        params.setdefault('id', event_id)
 
         def save_seattraits(seattraits, new_page):
             seattraits['seattraits'].extend(new_page['seattraits'])
             return seattraits
 
-        def _get_pages(url, params , page_func, error_msg):
+        def _get_pages(url, params, page_func, error_msg):
             return {}
 
         seattraits = _get_pages(url, event_id, save_seattraits, 'Could not retrieve seattraits.')
@@ -233,6 +234,6 @@ def get_creds():
 
 if __name__ == '__main__':
     stub = Stubbie()
-    pprint(stub.search_events({'q': 'Jimmy Carr'}))
-    pprint(stub.search_venues({'q': 'London'}))
-    #pprint(stub.get_seattraits('''212981'''))
+    #pprint(stub.search_events({'q': 'Jimmy Carr'}))
+    #pprint(stub.search_venues({'q': 'London'}))
+    pprint(stub.get_seattraits('''212981'''))
