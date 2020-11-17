@@ -84,28 +84,21 @@ class Stubbie():
 
         return locations
 
+    def get_seattraits(self, event_id, params={}):
+        '''get seattraits for an event'''
 
-            # def search_seattraits(self, params={}):
-            #     '''Search for events in a particular seattraits'''
-            #     allowed_params = {
-            #         'id',
-            #         'name',
-            #         'seatTraits',
-            #         'seatTraits.id',
-            #         'seatTraits.name',
-            #         'seatTraits.type',
-            #     }
-            #     url = self.set_url('/partners/catalog/events/v3/{eventId}/seatTraits')
-            #     params.setdefault('rows', '500')
-            #
-            #     def get_seattraits(seattraits, new_page):
-            #         seattraits['seattraits'].extend(new_page['seattraits'])
-            #         return seattraits
-            #
-            #     seattraits = self._get_pages(url, params, allowed_params, get_seattraits,
-            #                                 'Could not retrieve seattraits.')
-            #
-            #     return seattraits
+        url = self.set_url('/partners/catalog/events/v3/'+ event_id + '/seatTraits')
+
+        def save_seattraits(seattraits, new_page):
+            seattraits['seattraits'].extend(new_page['seattraits'])
+            return seattraits
+
+        def _get_pages(url, params , page_func, error_msg):
+            return {}
+
+        seattraits = _get_pages(url, event_id, save_seattraits, 'Could not retrieve seattraits.')
+
+        return seattraits
 
     def search_events(self, params={}):
         '''Search for an event based on defined parameters'''
@@ -242,3 +235,4 @@ if __name__ == '__main__':
     stub = Stubbie()
     pprint(stub.search_events({'q': 'Jimmy Carr'}))
     pprint(stub.search_venues({'q': 'London'}))
+    #pprint(stub.get_seattraits('''212981'''))
