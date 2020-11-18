@@ -88,8 +88,7 @@ class Stubbie():
         '''get seattraits for an event'''
 
         url = self.set_url('/partners/catalog/events/v3/'+ event_id + '/seatTraits')
-        params.setdefault('id', event_id)
-
+        #
         seats = requests.get(url, headers=self.headers)
         return seats.json()
 
