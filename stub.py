@@ -92,7 +92,8 @@ class Stubbie():
         seats = requests.get(url, headers=self.headers)
         if seats.status_code != 200:
             error_msg += f'\n{seats.status_code} {seats.reason}'
-            return
+            print(error_msg)
+            return False
 
 
 
