@@ -90,16 +90,10 @@ class Stubbie():
         url = self.set_url('/partners/catalog/events/v3/'+ event_id + '/seatTraits')
         params.setdefault('id', event_id)
 
-        def save_seattraits(seattraits, new_page):
-            seattraits['seattraits'].extend(new_page['seattraits'])
-            return seattraits
+        seats = requests.get(url, headers=self.headers)
+        return seats.json()
 
-        def _get_pages(url, params, page_func, error_msg):
-            return {}
-
-        seattraits = _get_pages(url, event_id, save_seattraits, 'Could not retrieve seattraits.')
-
-        return seattraits
+        return seats
 
     def search_events(self, params={}):
         '''Search for an event based on defined parameters'''
