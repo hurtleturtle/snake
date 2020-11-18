@@ -86,13 +86,11 @@ class Stubbie():
 
     def get_seattraits(self, event_id, params={}):
         '''get seattraits for an event'''
-
         url = self.set_url('/partners/catalog/events/v3/'+ event_id + '/seatTraits')
-        #
-        seats = requests.get(url, headers=self.headers)
-        return seats.json()
 
-        return seats
+        seats = requests.get(url, headers=self.headers)
+
+        return seats.json()
 
     def search_events(self, params={}):
         '''Search for an event based on defined parameters'''
