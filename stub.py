@@ -93,7 +93,7 @@ class Stubbie():
         if seats.status_code != 200:
             error_msg += f'\n{seats.status_code} {seats.reason}'
             print(error_msg)
-            return False
+            return {}
 
 
 
