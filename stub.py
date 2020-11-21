@@ -27,7 +27,7 @@ class Stubbie():
     def add_header(self, header, value):
         self.headers[header] = value
 
-    def login(self, basic_token, username, password, retries=3):
+    def login(self, basic_token, username, password):
         creds = {
             'basic_token': basic_token,
             'username': username,
@@ -36,9 +36,9 @@ class Stubbie():
 
         if not all(creds.values()):
             standard_creds = get_creds()
-        for cred, cred_value in creds.items():
-            if not cred_value:
-                creds[cred] = standard_creds[cred]
+            for cred, cred_value in creds.items():
+                if not cred_value:
+                    creds[cred] = standard_creds[cred]
 
         url = self.set_url('/sellers/oauth/accesstoken?' +
                            'grant_type=client_credentials')
