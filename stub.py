@@ -86,16 +86,15 @@ class Stubbie():
 
     def get_seattraits(self, event_id, params={}):
         '''get seattraits for an event'''
-        url = self.set_url('/partners/catalog/events/v3/'+ event_id + '/seatTraits')
-        error_msg =''
+        url = self.set_url('/partners/catalog/events/v3/' + event_id +
+                           '/seatTraits')
+        error_msg = ''
 
         seats = requests.get(url, headers=self.headers)
         if seats.status_code != 200:
             error_msg += f'\n{seats.status_code} {seats.reason}'
             print(error_msg)
             return {}
-
-
 
         return seats.json()
 
@@ -230,8 +229,9 @@ def get_creds():
 
     return data
 
+
 if __name__ == '__main__':
     stub = Stubbie()
-    #pprint(stub.search_events({'q': 'Jimmy Carr'}))
-    #pprint(stub.search_venues({'q': 'London'}))
-    pprint(stub.get_seattraits('''211a81'''))
+    # pprint(stub.search_events({'q': 'Jimmy Carr'}))
+    # pprint(stub.search_venues({'q': 'London'}))
+    pprint(stub.get_seattraits('211a81'))
